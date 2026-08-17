@@ -1,4 +1,4 @@
-# 01 · The context economy
+# 02 · The context economy
 
 > Knowledge is not free to hold. It is free to *store* and expensive to *carry*.
 > Almost every setup mistake I see comes from confusing the two.

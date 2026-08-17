@@ -1,4 +1,4 @@
-# 02 · Memory architecture
+# 03 · Memory architecture
 
 > The hard part of a knowledge system is not writing things down. It is refusing
 > to write most things down, and being able to defend each refusal.

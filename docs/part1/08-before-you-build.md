@@ -1,4 +1,4 @@
-# 05 · Before you build an agent
+# 08 · Before you build an agent
 
 > An agent is a loop with tools. Almost everything that determines whether it
 > works sits outside the loop. This is the checklist I complete before writing

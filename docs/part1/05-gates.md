@@ -1,4 +1,4 @@
-# 04 · Safety gates
+# 05 · Gates
 
 > Telling a model not to do something is a request. It is not a control.
 > Every design in this document follows from that one sentence.

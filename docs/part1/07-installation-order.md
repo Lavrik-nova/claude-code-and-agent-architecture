@@ -1,4 +1,4 @@
-# 03 · Setup — five stages, in order
+# 07 · Installation order — five stages
 
 Each stage depends on the one before it. Running them out of order produces a
 setup that looks complete and cannot be evaluated.
