@@ -1,0 +1,15 @@
+# Credentials — never publish
+.env
+.env.*
+*.pem
+*.key
+credentials*
+secrets*
+
+# Local noise
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
+node_modules/
+.venv/
