@@ -16,24 +16,82 @@ a harness is and skips the explanation.
 
 ---
 
-## The number, before anything else
+## What was actually built
 
-A repository that says "production" without showing a number is asking for credit
-it has not earned. Here is the project's first number, with its limits:
+Two things, and they are the reason the rest of this repository exists.
 
-> **62.8 % substantive answers on the first turn.**
-> 121 real questions, frozen, replayed against the release in production.
-> Four independent judges who had not seen the run.
-> **Price and promo codes: 8.7 %** — the worst category, and the one that costs sales.
->
-> One run, a model judge, no baseline without the agent.
-> **A reference point, not a verdict.**
+### A reasoning stack, not a decision tree
 
-The detail, the three dated incidents that shaped the architecture, and what
-these numbers do not prove:
-**[09 · What the measurement found](docs/part2/09-what-the-measurement-found.md)**.
+Six layers between an incoming message and a sent answer, ordered so that **the
+cheapest and most deterministic checks run first.** By the time a model is
+involved, the language is fixed, the intent is known, and the set of admissible
+facts has already been narrowed.
 
-It is the document I would read first if this were someone else's repository.
+```mermaid
+flowchart LR
+    M["message"] --> L1["language lock<br/><i>deterministic</i>"]
+    L1 --> L2["intent"]
+    L2 --> L3["principle cards<br/><i>25 governed rules</i>"]
+    L3 --> L4["fact selection<br/><i>only what those rules need</i>"]
+    L4 --> L5{"uncertainty<br/>contract"}
+    L5 -->|enough| L6["generation<br/><i>bounded by the cards</i>"]
+    L5 -->|not enough| E["stop · ask · hand over"]
+    style L1 fill:#e7f5ff,stroke:#1971c2
+    style L5 fill:#fff4e6,stroke:#e8590c,stroke-width:2px
+    style E fill:#f3f0ff,stroke:#6741d9
+```
+
+The core is **25 principle cards**, each a small governed rule with twelve
+fields. Four of them do the work no rule set does:
+
+- **`forbidden_action`** — what may never be done under this rule, carried next
+  to the permission. Present on all 25.
+- **`uncertainty_rule`** — what to do when the inputs are insufficient, **per
+  card, not globally**. 24 distinct values across 25 cards: a missing input means
+  something different for a warranty question than for a stock question.
+- **`known_facts`** — the facts this rule depends on, declared, so the system can
+  rank what is missing instead of listing it.
+- **`exceptions`** — where the rule does not hold.
+
+**[Read the reasoning stack →](docs/part2/03-reasoning-stack.md)**
+
+### A memory that stays correct while the catalogue moves
+
+Products are discontinued, specifications are corrected, the website is edited by
+someone who does not know an agent reads it. An agent whose knowledge is a
+snapshot is right on the day it ships and degrades from then on — invisibly,
+because a stale answer looks exactly like a fresh one.
+
+Four mechanisms hold it together:
+
+| | |
+|---|---|
+| **Three states, not two** | Active, **stale**, absent. Collapsing the middle one makes the agent either deny products that exist or sell products that do not |
+| **The review filter lives in SQL** | Not in the calling code. An unapproved page is *unreachable* — there is no code path that returns it, because there is no code path that selects it |
+| **Any error halts reconciliation entirely** | A partial crawl reporting nineteen missing products is indistinguishable from nineteen discontinued ones. Nothing is ever deleted; rows are marked |
+| **Human review before a learned item goes live** | An agent that writes its own durable knowledge without review is not more mature — it is a system whose wrong entries reinforce themselves |
+
+**[Read the memory architecture →](docs/part2/05-memory-and-updates.md)**
+
+---
+
+## And it was measured
+
+Rare enough to state plainly: this system has been measured, against a frozen set
+of real questions, by judges that did not produce the answers.
+
+**121 real questions**, frozen, replayed against the release in production. Four
+independent judges, each with fresh context, none of whom saw the answering run.
+**62.8 % of conversations resolved on the first turn with no human involved** —
+and, in the same run, the weakest category exposed at 8.7 %, which no overall
+average would have shown.
+
+One run, a model judge, no baseline. **A reference point, not a verdict** — and
+the document says so.
+
+**[09 · What the measurement found →](docs/part2/09-what-the-measurement-found.md)**
+— the numbers, three dated incidents with line numbers, and what they do not
+prove.
 
 ---
 
