@@ -115,8 +115,36 @@ one must not guess at all, the other may offer a qualified answer. A single
 global confidence threshold cannot express that, which is why systems that use
 one end up either over-cautious everywhere or over-confident everywhere.
 
-**`exceptions`.** Where the rule does not hold. A rule without stated limits has
-not been thought through, and the limits are where the failures live.
+**`exceptions`.** Where the rule does not hold. The limits are where the failures
+live — and **only 7 of the 25 cards currently carry one.** The other eighteen
+were written as rules without stated limits, which by my own argument means they
+have not been fully thought through. The field exists and is under-used. That is
+a backlog item, not a design.
+
+### The cards, in numbers
+
+| | |
+|---|---|
+| Principle cards | 25 |
+| Facts | 27 |
+| Distinct `uncertainty_rule` values | 24 of 25 |
+| Cards with a non-empty `forbidden_action` | 25 of 25 |
+| Cards with stated `exceptions` | **7 of 25** |
+| Approval states in use | `approved` (15), `approved_locked` (10) |
+| Cards in draft | 0 |
+| Channel scope | 20 all channels, 5 widget-only |
+| Average triggers per card | 2.1 |
+
+`approved_locked` is a second approval tier: cards that may not be edited without
+an explicit unlock. It covers the rules where a wrong edit produces a commitment
+the business has to honour — warranty language, and anything a customer would
+reasonably act on.
+
+Two numbers in that table are uncomfortable and both are left in. Seven of
+twenty-five on `exceptions` is a gap. Zero drafts means the review step has never
+actually rejected a card, which is either discipline upstream or a review that
+has not yet been tested — I do not currently know which, and saying so is more
+useful than picking the flattering reading.
 
 **`approval_status` and `channel_scope`.** A card is not live because someone
 wrote it. It is live because it was approved, and it applies to the channels it
@@ -157,20 +185,54 @@ what loads into a single answer.
 
 ---
 
-## Layer 5 · Sufficiency check
+## Layer 5 · The uncertainty contract — and an honest limit
 
-The layer that separates this from a retrieval-and-generate pipeline.
+This is the layer where I have to be precise, because an earlier draft of this
+document overstated it and a reviewer caught it.
 
-Before anything is generated, the system asks whether the selected facts actually
-satisfy what the active principles require. If they do not, generation does not
-run. The `uncertainty_rule` of the governing card decides what happens instead:
-ask one targeted question, give a qualified partial answer, or hand over.
+**What it is.** Every principle card carries an `uncertainty_rule`: what to do
+when the inputs that rule depends on are not present. Ask one targeted question,
+give a qualified partial answer, or hand over. It arrives with the card, scoped
+to that rule, and it is data — reviewable, diffable, approved individually.
 
-**Why before and not after.** A model asked to generate an answer and then judge
-its own confidence will produce a fluent answer and a confident score, because
-both come from the same process. Checking inputs before generation is a different
-question asked of different material, and it is the only version that can come
-back negative.
+**How specific it actually is.** Twenty-five cards carry **24 distinct**
+`uncertainty_rule` values. It is not a template repeated with the field filled
+in; it is close to one deliberate decision per rule. Every card also carries a
+non-empty `forbidden_action`.
+
+**What it is not.** It is **not a deterministic gate.** There is no function in
+this codebase that evaluates fact coverage and blocks generation. The contract is
+expressed in data and carried out by the model.
+
+That distinction matters and I am not going to blur it. The argument against a
+post-generation confidence score — that a model rating its own output is the same
+process judging itself — applies here too, only earlier and with better inputs.
+Moving the question before generation and scoping it per rule narrows the blind
+spot. It does not eliminate it.
+
+**What would make it a real gate.** A deterministic coverage check: for the
+active cards, are all `known_facts` present in the selected set? If not, the
+`next_step_class` is forced without consulting the model at all. This is a small
+function over data the system already holds — perhaps forty lines. It is not
+written, and until it is, this layer is a strong contract rather than a control.
+
+By the standard used throughout this repository — *a control must be code, a flag
+or a test* — this layer does not yet qualify. Stating that is the point of
+having the standard.
+
+### What is deterministic today
+
+For the avoidance of the same doubt, these are code and verifiable in the source:
+
+| Mechanism | Deterministic |
+|---|---|
+| Language resolution (layer 1) | Yes — arithmetic, no model call |
+| Fact selection (layer 4) | Yes — set operations over declared dependencies |
+| Review/activation filter on retrieval | Yes — enforced in the SQL predicate |
+| Channel exclusion of memory types | Yes — filtered at query level |
+| Catalogue reconciliation halt on any error | Yes |
+| Reply-status classification (per thread) | Yes |
+| The uncertainty contract (layer 5) | **No — data contract, model-enforced** |
 
 ---
 

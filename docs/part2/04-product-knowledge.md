@@ -52,12 +52,29 @@ Putting the filter inside the query makes the unapproved page **unreachable**.
 There is no code path that returns it, because there is no code path that selects
 it. The comment in the source says exactly this: *so no caller can bypass it.*
 
-This is the same sentence that governs the entire setup in Part I:
+The generalization: telling *a future programmer* not to do something is also a
+request. A control is something the system cannot do.
 
-> Telling a model not to do something is a request. It is not a control.
+### What this filter does not cover
 
-Here it extends one step further — telling *a future programmer* not to do
-something is also a request. A control is something the system cannot do.
+A reviewer pushed on this and the push was correct. Putting the predicate in the
+query closes exactly one hole — the caller who forgets. It does not close:
+
+- **Direct SQL** from a script or a console session
+- **A second retrieval path** written later without the predicate
+- **A read replica or an export** consumed by something downstream
+- **An administrative interface** that legitimately needs unapproved rows
+
+There is currently **no test asserting that a new query against this table
+carries the predicate.** That test is the thing that would turn a good habit into
+an invariant, and it does not exist. Until it does, this is one enforced path
+rather than a schema-level guarantee — a distinction worth keeping, since the
+whole argument for putting the filter in SQL was that habits do not survive
+contact with a deadline.
+
+The stronger version is a view that exposes only approved and active rows, with
+the base table reachable only by the administrative path. That is a migration,
+not an edit, and it is on the list rather than done.
 
 ### Why scoring is deterministic
 

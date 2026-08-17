@@ -61,8 +61,17 @@ produces a fluent answer and a confident score, because both come from the same
 process. The failure the score is supposed to catch is exactly the one it cannot
 see.
 
-The sufficiency check runs **before** generation, against the inputs, and asks a
-different question of different material. That version can come back negative.
+**The honest version of this argument.** The uncertainty contract asks the
+question earlier, against the inputs, and scoped per rule rather than globally —
+24 distinct rules across 25 cards. That is a better position. It is not a
+different kind of thing: the contract is carried out by the model, not by a gate,
+so the same blind spot exists in narrower form. See
+[03 · The reasoning stack](03-reasoning-stack.md#layer-5--the-uncertainty-contract--and-an-honest-limit).
+
+A deterministic coverage check — are all `known_facts` of the active cards
+present? — would make it a control rather than a contract. It is roughly forty
+lines over data the system already holds, and it is not written. That is the
+single largest gap between what this architecture claims and what it enforces.
 
 ---
 
