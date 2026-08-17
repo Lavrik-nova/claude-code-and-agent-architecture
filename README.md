@@ -16,6 +16,27 @@ a harness is and skips the explanation.
 
 ---
 
+## The number, before anything else
+
+A repository that says "production" without showing a number is asking for credit
+it has not earned. Here is the project's first number, with its limits:
+
+> **62.8 % substantive answers on the first turn.**
+> 121 real questions, frozen, replayed against the release in production.
+> Four independent judges who had not seen the run.
+> **Price and promo codes: 8.7 %** — the worst category, and the one that costs sales.
+>
+> One run, a model judge, no baseline without the agent.
+> **A reference point, not a verdict.**
+
+The detail, the three dated incidents that shaped the architecture, and what
+these numbers do not prove:
+**[09 · What the measurement found](docs/part2/09-what-the-measurement-found.md)**.
+
+It is the document I would read first if this were someone else's repository.
+
+---
+
 ## Part I · The configured assistant
 
 What is actually installed, why each piece is there, and what I rejected.
@@ -47,6 +68,7 @@ neutral example.
 | 6 | [Limits and handoff](docs/part2/06-limits-and-handoff.md) | When the system must stop, and why admitting ignorance is worth paying for |
 | 7 | [Catching a bad answer](docs/part2/07-catching-bad-answers.md) | What is recorded per exchange, what raises an alarm, how a failure is dissected |
 | 8 | [What is deliberately absent](docs/part2/08-deliberately-absent.md) | Rejected designs, with reasons |
+| 9 | [What the measurement found](docs/part2/09-what-the-measurement-found.md) | **The numbers, three dated incidents, and what they do not prove** |
 
 ## Also here
 
@@ -80,6 +102,46 @@ says so.
 
 No client name, no product names, no credentials, no customer data in any form,
 including anonymized samples.
+
+---
+
+## If you only do one thing
+
+Everything above compresses to one sentence: **a control has to be something the
+system cannot decline.** Not a rule in a prompt, not a habit, not a note in a
+file everyone stopped reading in week three. Code, a flag, or a test.
+
+I spent a long time believing the well-worded version was enough. It held every
+time until the input got strange, and then it did not, and nothing raised an
+alarm — which is the part that costs you.
+
+If you take one thing from this repository, take the smallest one.
+
+**Freeze twenty real questions this week.** Not invented ones — twenty your
+system actually received. Run them. Then have something that did not produce the
+answers grade the answers: another model with a clean context, a colleague,
+anyone who was not in the room.
+
+You will not enjoy the number. That is the whole value of it. Mine said 62.8 %,
+and the useful part was not the 62.8 — it was finding out that the question
+customers ask right before they buy was failing nine times out of ten, hidden
+comfortably inside an average that looked like progress.
+
+Twenty questions and one honest grader is a Tuesday afternoon. It will tell you
+more about your system than another month of building on top of it.
+
+---
+
+I am still missing things, and they are named rather than hidden: no controlled
+comparison against no setup, no deny-list in my own permission configuration, and
+no multi-agent system I have actually built — I argue about when a second agent
+is justified, and an argument is not a practice.
+
+If something here is wrong, I would genuinely rather know. The decision log
+exists so a bad call can be found and reversed, and that only works if somebody
+looks.
+
+**[nova@lavrikgeo.com](mailto:nova@lavrikgeo.com)** · [lavrikgeo.com](https://lavrikgeo.com)
 
 ## Licence
 
